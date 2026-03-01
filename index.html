@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Premium Holi Surprise & Rewards 🎨</title>
+    <meta name="description" content="Unlock your premium Holi surprise and win rewards! Send magical wishes to your friends.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #ff0080;
+            --secondary: #7928ca;
+            --accent: #ffeb3b;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --neon-glow: 0 0 15px rgba(255, 0, 128, 0.5);
+            --font-main: 'Poppins', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Canvas Background for Particles --- */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- Ad Containers --- */
+        .ad-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 10px 0;
+            z-index: 5;
+            position: relative;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .ad-native-wrapper {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 10px;
+            margin: 15px 0;
+            border: 1px dashed rgba(255,255,255,0.3);
+            min-height: 100px; /* Placeholder to prevent shift */
+        }
+
+        .sticky-bottom-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding-top: 25px; /* Space for close button */
+            padding-bottom: 5px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .close-ad-btn {
+            position: absolute;
+            top: -15px;
+            right: 15px;
+            background: #ff0055;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+
+        /* --- Main Layout --- */
+        .app-container {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 100px; /* Space for sticky ad */
+        }
+
+        /* --- Glass Card --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 22px;
+            border: 1px solid var(--glass-border);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            margin-bottom: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:active {
+            transform: scale(0.98);
+        }
+
+        /* --- Typography & Inputs --- */
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+            font-family: var(--font-main);
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: var(--neon-glow);
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* --- Buttons --- */
+        .btn-main {
+            width: 100%;
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(45deg, #ff0080, #7928ca);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(121, 40, 202, 0.4);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-main:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(121, 40, 202, 0.6);
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* --- Animations --- */
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.8s ease forwards; }
+        .slide-up { animation: slideUp 0.6s ease forwards; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .shake-anim { animation: shake 0.5s; }
+
+        /* --- Leaderboard & Stats --- */
+        .leaderboard-container {
+            margin-top: 30px;
+        }
+        
+        .leaderboard-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .user-row {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .rank-crown { color: gold; font-size: 18px; margin-right: 5px; }
+
+        .visitor-counter {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            background: rgba(0,0,0,0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            left: 50%;
+            position: relative;
+            transform: translateX(-50%);
+        }
+
+        /* --- Music Control --- */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        .bar {
+            width: 3px;
+            height: 15px;
+            background: white;
+            margin: 0 2px;
+            border-radius: 2px;
+            animation: equalize 1s infinite;
+        }
+        .music-btn.paused .bar { animation: none; height: 5px; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes equalize {
+            0%, 100% { height: 10px; }
+            50% { height: 20px; }
+        }
+
+        /* --- Typing Effect --- */
+        .typewriter {
+            overflow: hidden; 
+            white-space: nowrap; 
+            margin: 0 auto; 
+            border-right: .15em solid orange; 
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: orange; } }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Audio -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <!-- Replaced with a generic placeholder URL for demo. Replace with Holi mp3 -->
+    </audio>
+
+    <!-- Music Toggle -->
+    <div class="music-btn paused" onclick="toggleMusic()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+
+    <!-- Canvas for Gulal Particles -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- App Container -->
+    <div class="app-container">
+
+        <!-- 1️⃣ TOP BANNER ADSTERRA -->
+        <div class="ad-container fade-in">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '48020c10756ef7aa084251bb0420c4a2',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="https://www.highperformanceformat.com/48020c10756ef7aa084251bb0420c4a2/invoke.js"></script>
+        </div>
+
+        <!-- Section 1: Name Input -->
+        <div id="section-input" class="glass-card slide-up">
+            <h1>Happy Holi! 🎨</h1>
+            <p id="ref-msg">Create your magical 3D Holi wish.</p>
+            
+            <div class="input-group">
+                <input type="text" id="username" placeholder="आपका नाम लिखे.." autocomplete="off">
+            </div>
+            
+            <button class="btn-main" onclick="generateWish()">Unlock Surprise ✨</button>
+        </div>
+
+        <!-- Section 2: Wish Card (Hidden initially) -->
+        <div id="section-wish" class="glass-card hidden">
+            <h2 style="font-size: 16px; color: #eee; margin-bottom: 5px;">Sending Colorful Wishes</h2>
+            <h1 id="wish-display" class="typewriter"></h1>
+            
+            <div style="font-size: 40px; margin: 10px 0;">🌈✨🔫</div>
+
+            <p>रंगों की तरह आपकी ज़िंदगी भी
+खुशियों से भर जाए, हर सपना हकीकत बने —
+आपको और आपके परिवार को दिल से होली की शुभकामनाएँ! 🎨✨</p>
+
+            <!-- 2️⃣ NATIVE BANNER ADSTERRA -->
+            <div class="ad-native-wrapper">
+                 <script async="async" data-cfasync="false" src="https://pl26900808.effectivegatecpm.com/912041258b6a409aa6a965d8d7cd0ef0/invoke.js"></script>
+                <div id="container-912041258b6a409aa6a965d8d7cd0ef0"></div>
+            </div>
+
+            <div class="stats-row" style="display: flex; justify-content: space-around; margin-bottom: 15px; font-weight: bold;">
+                <span>💰 <span id="coin-display">0</span> Coins</span>
+                <span>👑 <span id="share-display">0</span> Shares</span>
+            </div>
+
+            <button class="btn-main btn-whatsapp" onclick="shareOnWhatsApp()">
+                <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                Share on WhatsApp (+10 Coins)
+            </button>
+        </div>
+
+        <!-- Leaderboard Section -->
+        <div class="leaderboard-container glass-card">
+            <h3 class="leaderboard-title">🏆 Top 50 Holi Legends</h3>
+            <div id="leaderboard-list" style="max-height: 300px; overflow-y: auto;">
+                <p>Loading Legends...</p>
+            </div>
+        </div>
+
+        <div class="visitor-counter">
+            👥 Total Holi Visitors: <span id="visitor-count">...</span>
+        </div>
+
+    </div>
+
+    <!-- 3️⃣ STICKY BOTTOM BANNER ADSTERRA (Optional Reused) -->
+    <div class="sticky-bottom-ad" id="sticky-ad">
+        <div class="close-ad-btn" onclick="document.getElementById('sticky-ad').style.display='none'">X</div>
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '48020c10756ef7aa084251bb0420c4a2',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/48020c10756ef7aa084251bb0420c4a2/invoke.js"></script>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        // ==========================================
+        // ⚙️ FIREBASE CONFIGURATION (REPLACE THESE)
+        // ==========================================
+        const firebaseConfig = {
+    apiKey: "AIzaSyCCaaPI5_1W0x4BiNseiwb904ztOBINOgc",
+    authDomain: "appstore-8c86b.firebaseapp.com",
+    databaseURL: "https://appstore-8c86b-default-rtdb.firebaseio.com",
+    projectId: "appstore-8c86b",
+    storageBucket: "appstore-8c86b.firebasestorage.app",
+    messagingSenderId: "614114254662",
+    appId: "1:614114254662:web:c965ac9344c3e8351e8f47",
+    measurementId: "G-DRLMCB6RQF"
+};
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // ==========================================
+        // 🎨 3D GULAL PARTICLES SYSTEM
+        // ==========================================
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const colors = ['#ff0080', '#7928ca', '#ffeb3b', '#00e5ff', '#ff4081'];
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 5 + 2;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if(this.size > 0.1) this.size -= 0.01;
+                if(this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if(this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            for(let i=0; i<50; i++) particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for(let i=0; i<particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+
+        function explodeConfetti() {
+            for(let i=0; i<30; i++) particles.push(new Particle());
+        }
+
+        // ==========================================
+        // 🧠 CORE APPLICATION LOGIC
+        // ==========================================
+        let currentUser = null;
+        let userId = localStorage.getItem('holi_user_id');
+
+        // Check URL for Ref
+        const urlParams = new URLSearchParams(window.location.search);
+        const refName = urlParams.get('ref');
+        
+        if (refName) {
+            document.getElementById('ref-msg').innerHTML = `<span style="color:yellow; font-weight:bold;">${refName}</span> ने आपके लिए 🎁 गिफ्ट  भेजा Surprise! है 🎁`;
+        }
+
+        // --- User Initialization ---
+        if (!userId) {
+            userId = 'user_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('holi_user_id', userId);
+        }
+
+        // Realtime Visitor Counter
+        const statsRef = db.ref('stats/totalVisitors');
+        statsRef.transaction(current_value => (current_value || 0) + 1);
+        statsRef.on('value', (snapshot) => {
+            document.getElementById('visitor-count').innerText = snapshot.val() || 0;
+        });
+
+        // --- Generate Wish Logic ---
+        function generateWish() {
+            const name = document.getElementById('username').value.trim();
+            if (!name) {
+                alert("Please enter your name first!");
+                return;
+            }
+
+            // Save User to DB
+            currentUser = {
+                name: name,
+                shares: 0,
+                coins: 0,
+                lastSeen: firebase.database.ServerValue.TIMESTAMP
+            };
+            
+            // Check if exists or create
+            db.ref('holiUsers/' + userId).once('value', snapshot => {
+                if(snapshot.exists()) {
+                    const data = snapshot.val();
+                    currentUser.coins = data.coins;
+                    currentUser.shares = data.shares;
+                    // Update Name if changed
+                    db.ref('holiUsers/' + userId).update({ name: name });
+                } else {
+                    db.ref('holiUsers/' + userId).set(currentUser);
+                }
+                updateUI();
+            });
+
+            // Transitions
+            document.getElementById('section-input').classList.add('hidden');
+            document.getElementById('section-wish').classList.remove('hidden');
+            document.getElementById('section-wish').classList.add('fade-in');
+            
+            document.getElementById('wish-display').innerText = `Happy Holi, ${name}!`;
+            
+            // Effects
+            explodeConfetti();
+            explodeConfetti();
+            if(!isMusicPlaying) toggleMusic(); // Auto play music on wish
+        }
+
+        function updateUI() {
+            document.getElementById('coin-display').innerText = currentUser.coins;
+            document.getElementById('share-display').innerText = currentUser.shares;
+        }
+
+        // --- WhatsApp Share Logic ---
+        function shareOnWhatsApp() {
+            const name = document.getElementById('username').value || "Friend";
+            const shareUrl = encodeURIComponent(`${window.location.origin}${window.location.pathname}?ref=${name}`);
+            const msg = `*${name}* ने आपके लिए होली के लिए गिफ्ट भेजा हे अपना नाम लिख के unlock करो🔓🎁 👇%0A${shareUrl}%0A%0AHappy Holi 🌈`;
+            
+            // Update Stats
+            db.ref('holiUsers/' + userId).transaction(user => {
+                if (user) {
+                    user.shares = (user.shares || 0) + 1;
+                    user.coins = (user.coins || 0) + 10; // +10 Coins
+                }
+                return user;
+            }, (error, committed, snapshot) => {
+                if (committed) {
+                    currentUser = snapshot.val();
+                    updateUI();
+                    explodeConfetti();
+                }
+            });
+
+            window.open(`https://wa.me/?text=${msg}`, '_blank');
+        }
+
+        // --- Music System ---
+        const audio = document.getElementById('bg-music');
+        const musicBtn = document.querySelector('.music-btn');
+        let isMusicPlaying = false;
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                audio.pause();
+                musicBtn.classList.add('paused');
+            } else {
+                audio.play().catch(e => console.log("Audio requires interaction"));
+                musicBtn.classList.remove('paused');
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        // --- Easter Egg (3 Taps) ---
+        let tapCount = 0;
+        let tapTimer;
+        
+        document.getElementById('section-wish').addEventListener('click', (e) => {
+            // Prevent triggering on buttons
+            if(e.target.tagName === 'BUTTON') return;
+
+            tapCount++;
+            clearTimeout(tapTimer);
+            tapTimer = setTimeout(() => { tapCount = 0; }, 3000);
+
+            if(tapCount === 3) {
+                triggerEasterEgg();
+                tapCount = 0;
+            }
+        });
+
+        function triggerEasterEgg() {
+            const card = document.getElementById('section-wish');
+            card.classList.add('shake-anim');
+            setTimeout(() => card.classList.remove('shake-anim'), 500);
+            
+            alert("🐰 SECRET UNLOCKED! +20 Coins Bonus!");
+            
+            // Add Coins
+             db.ref('holiUsers/' + userId).transaction(user => {
+                if (user) {
+                    user.coins = (user.coins || 0) + 20;
+                }
+                return user;
+            }, (error, committed, snapshot) => {
+                 if(committed) {
+                     currentUser = snapshot.val();
+                     updateUI();
+                     for(let i=0; i<5; i++) setTimeout(explodeConfetti, i*200);
+                 }
+            });
+        }
+
+        // --- Leaderboard System ---
+        const leaderboardList = document.getElementById('leaderboard-list');
+
+        // Listen for top 50 users sorted by shares
+        db.ref('holiUsers').orderByChild('shares').limitToLast(50).on('value', (snapshot) => {
+            leaderboardList.innerHTML = '';
+            let users = [];
+            snapshot.forEach(childSnapshot => {
+                users.push(childSnapshot.val());
+            });
+            
+            // Reverse to show highest first
+            users.reverse();
+
+            users.forEach((user, index) => {
+                const row = document.createElement('div');
+                row.className = 'user-row';
+                
+                let rankIcon = `#${index + 1}`;
+                if(index === 0) rankIcon = '👑';
+                if(index === 1) rankIcon = '🥈';
+                if(index === 2) rankIcon = '🥉';
+
+                row.innerHTML = `
+                    <span><span class="rank-crown">${rankIcon}</span> <b>${user.name}</b></span>
+                    <span style="color:var(--accent);">👑 ${user.shares}</span>
+                `;
+                leaderboardList.appendChild(row);
+            });
+        });
+
+    </script>
+</body>
+</html>
